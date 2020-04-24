@@ -27,5 +27,7 @@ out/
 # IDE files
 .idea
 
+# Rust build files
+contract/target/**
 
 yarn-error.log
