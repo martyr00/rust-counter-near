@@ -13,7 +13,7 @@
     "prestart": "yarn build && yarn deploy:contract",
     "start": "parcel src/index.html",
     "start:dev": "env-cmd -f ./neardev/dev-account.env parcel src/index.html",
-    "test": "jest && cd contract && cargo test -- --nocapture"
+    "test": "yarn build && jest && cd contract && cargo test -- --nocapture"
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
