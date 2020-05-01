@@ -1,3 +1,13 @@
+//! This contract implements simple counter backed by storage on blockchain.
+//!
+//! The contract provides methods to [increment] / [decrement] counter and
+//! [get it's current value][get_num] or [reset].
+//!
+//! [increment]: struct.Counter.html#method.increment
+//! [decrement]: struct.Counter.html#method.decrement
+//! [get_num]: struct.Counter.html#method.get_num
+//! [reset]: struct.Counter.html#method.reset
+
 use borsh::{BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
 
@@ -15,44 +25,57 @@ pub struct Counter {
 
 #[near_bindgen]
 impl Counter {
-    /// returns 8-bit signed integer of the counter value
-    // this must match the type from our struct's 'val' defined above
-    // note the parameter is &self (without being mutable) meaning it doesn't modify state
-    // in the frontend (/src/main.js) this is added to the "viewMethods" array
-    // using near-shell we can call this by:
-    // near view counter.YOU.testnet get_num
+    /// Returns 8-bit signed integer of the counter value.
+    ///
+    /// This must match the type from our struct's 'val' defined above.
+    ///
+    /// Note, the parameter is `&self` (without being mutable) meaning it doesn't modify state.
+    /// In the frontend (/src/main.js) this is added to the "viewMethods" array
+    /// using near-shell we can call this by:
+    ///
+    /// ```bash
+    /// near view counter.YOU.testnet get_num
+    /// ```
     pub fn get_num(&self) -> i8 {
         return self.val;
     }
 
-    /// increment the counter
-    // note the parameter is "&mut self" as this function modifies state
-    // in the frontend (/src/main.js) this is added to the "changeMethods" array
-    // using near-shell we can call this by:
-    // near call counter.YOU.testnet increment --accountId donation.YOU.testnet
+    /// Increment the counter.
+    ///
+    /// Note, the parameter is "&mut self" as this function modifies state.
+    /// In the frontend (/src/main.js) this is added to the "changeMethods" array
+    /// using near-shell we can call this by:
+    ///
+    /// ```bash
+    /// near call counter.YOU.testnet increment --accountId donation.YOU.testnet
+    /// ```
     pub fn increment(&mut self) {
         // note: adding one like this is an easy way to accidentally overflow
         // real smart contracts will want to have safety checks
-        self.val = self.val + 1;
+        self.val += 1;
         let log_message = format!("Increased number to {}", self.val);
         env::log(log_message.as_bytes());
         after_counter_change();
     }
 
-    /// decrement (subtract from) the counter
-    // in (/src/main.js) this is also added to the "changeMethods" array
-    // using near-shell we can call this by:
-    // near call counter.YOU.testnet decrement --accountId donation.YOU.testnet
+    /// Decrement (subtract from) the counter.
+    ///
+    /// In (/src/main.js) this is also added to the "changeMethods" array
+    /// using near-shell we can call this by:
+    ///
+    /// ```bash
+    /// near call counter.YOU.testnet decrement --accountId donation.YOU.testnet
+    /// ```
     pub fn decrement(&mut self) {
         // note: subtracting one like this is an easy way to accidentally overflow
         // real smart contracts will want to have safety checks
-        self.val = self.val - 1;
+        self.val -= 1;
         let log_message = format!("Decreased number to {}", self.val);
         env::log(log_message.as_bytes());
         after_counter_change();
     }
 
-    /// reset to zero
+    /// Reset to zero.
     pub fn reset(&mut self) {
         self.val = 0;
         // Another way to log is to cast a string into bytes, hence "b" below:
@@ -63,7 +86,7 @@ impl Counter {
 // unlike the struct's functions above, this function cannot use attributes #[derive(…)] or #[near_bindgen]
 // any attempts will throw helpful warnings upon 'cargo build'
 // while this function cannot be invoked directly on the blockchain, it can be called from an invoked function
-pub fn after_counter_change() {
+fn after_counter_change() {
     // show helpful warning that i8 (8-bit signed integer) will overflow above 127 or below -128
     env::log("Make sure you don't overflow, my friend.".as_bytes());
 }
@@ -102,7 +125,7 @@ mod tests {
             random_seed: vec![0, 1, 2],
             is_view,
             output_data_receivers: vec![],
-            epoch_height: 19
+            epoch_height: 19,
         }
     }
 
@@ -113,7 +136,7 @@ mod tests {
         let context = get_context(vec![], false);
         testing_env!(context);
         // instantiate a contract variable with the counter at zero
-        let mut contract = Counter{ val: 0 };
+        let mut contract = Counter { val: 0 };
         contract.increment();
         println!("Value after increment: {}", contract.get_num());
         // confirm that we received 1 when calling get_num
@@ -124,7 +147,7 @@ mod tests {
     fn decrement() {
         let context = get_context(vec![], false);
         testing_env!(context);
-        let mut contract = Counter{ val: 0 };
+        let mut contract = Counter { val: 0 };
         contract.decrement();
         println!("Value after decrement: {}", contract.get_num());
         // confirm that we received -1 when calling get_num
@@ -135,7 +158,7 @@ mod tests {
     fn increment_and_reset() {
         let context = get_context(vec![], false);
         testing_env!(context);
-        let mut contract = Counter{ val: 0 };
+        let mut contract = Counter { val: 0 };
         contract.increment();
         contract.reset();
         println!("Value after reset: {}", contract.get_num());
