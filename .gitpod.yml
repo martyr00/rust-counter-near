@@ -24,7 +24,7 @@ github:
 tasks:
   - before: nvm use default
     init: yarn
-    command: gp open README-Gitpod.md && npm install near-shell -g --no-optional && near dev
+    command: gp open README-Gitpod.md && npm install near-shell -g --no-optional && yarn dev
 
 ports:
   - port: 1234
