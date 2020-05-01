@@ -28,4 +28,4 @@ tasks:
 
 ports:
   - port: 1234
-    onOpen: open-preview
+    onOpen: open-browser
