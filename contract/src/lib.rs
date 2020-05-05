@@ -110,10 +110,10 @@ mod tests {
     // this is also a useful list to peek at when wondering what's available in env::*
     fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
         VMContext {
-            current_account_id: "alice_near".to_string(),
-            signer_account_id: "robert_near".to_string(),
+            current_account_id: "alice.testnet".to_string(),
+            signer_account_id: "robert.testnet".to_string(),
             signer_account_pk: vec![0, 1, 2],
-            predecessor_account_id: "jane_near".to_string(),
+            predecessor_account_id: "jane.testnet".to_string(),
             input,
             block_index: 0,
             block_timestamp: 0,
