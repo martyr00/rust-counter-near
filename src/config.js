@@ -1,66 +1,67 @@
 const CONTRACT_NAME = process.env.CONTRACT_NAME || 'asdf.test'; /* TODO: change this to your account */
 
-function getConfig(env) {
-    switch (env) {
-
-        case 'production':
-            return {
-                networkId: 'mainnet',
-                nodeUrl: 'https://rpc.mainnet.nearprotocol.com',
-                contractName: CONTRACT_NAME,
-                walletUrl: 'https://wallet.mainnet.nearprotocol.com',
-                helperUrl: 'https://helper.mainnet.nearprotocol.com',
-            };
-        case 'development':
-            return {
-                networkId: 'default',
-                nodeUrl: 'https://rpc.testnet.nearprotocol.com',
-                contractName: CONTRACT_NAME,
-                walletUrl: 'https://wallet.testnet.nearprotocol.com',
-                helperUrl: 'https://helper.testnet.nearprotocol.com',
-            };
-        case 'devnet':
-            return {
-                networkId: 'devnet',
-                nodeUrl: 'https://rpc.devnet.nearprotocol.com',
-                contractName: CONTRACT_NAME,
-                walletUrl: 'https://wallet.devnet.nearprotocol.com',
-                helperUrl: 'https://helper.devnet.nearprotocol.com',
-            };
-        case 'betanet':
-            return {
-                networkId: 'betanet',
-                nodeUrl: 'https://rpc.betanet.nearprotocol.com',
-                contractName: CONTRACT_NAME,
-                walletUrl: 'https://wallet.betanet.nearprotocol.com',
-                helperUrl: 'https://helper.betanet.nearprotocol.com',
-            };
-        case 'local':
-            return {
-                networkId: 'local',
-                nodeUrl: 'http://localhost:3030',
-                keyPath: `${process.env.HOME}/.near/validator_key.json`,
-                walletUrl: 'http://localhost:4000/wallet',
-                contractName: CONTRACT_NAME,
-            };
-        case 'test':
-        case 'ci':
-            return {
-                networkId: 'shared-test',
-                nodeUrl: 'http://shared-test.nearprotocol.com:3030',
-                contractName: CONTRACT_NAME,
-                masterAccount: 'test.near',
-            };
-        case 'ci-staging':
-            return {
-                networkId: 'shared-test-staging',
-                nodeUrl: 'http://staging-shared-test.nearprotocol.com:3030',
-                contractName: CONTRACT_NAME,
-                masterAccount: 'test.near',
-            };
-        default:
-            throw Error(`Unconfigured environment '${env}'. Can be configured in src/config.js.`);
-    }
+function getConfig (env) {
+  switch (env) {
+    case 'production':
+    case 'mainnet':
+      return {
+        networkId: 'mainnet',
+        nodeUrl: 'https://rpc.mainnet.near.org',
+        contractName: CONTRACT_NAME,
+        walletUrl: 'https://wallet.near.org',
+        helperUrl: 'https://helper.mainnet.near.org'
+      }
+    case 'development':
+    case 'testnet':
+      return {
+        networkId: 'default',
+        nodeUrl: 'https://rpc.testnet.near.org',
+        contractName: CONTRACT_NAME,
+        walletUrl: 'https://wallet.testnet.near.org',
+        helperUrl: 'https://helper.testnet.near.org'
+      }
+    case 'devnet':
+      return {
+        networkId: 'devnet',
+        nodeUrl: 'https://rpc.devnet.near.org',
+        contractName: CONTRACT_NAME,
+        walletUrl: 'https://wallet.devnet.near.org',
+        helperUrl: 'https://helper.devnet.near.org'
+      }
+    case 'betanet':
+      return {
+        networkId: 'betanet',
+        nodeUrl: 'https://rpc.betanet.near.org',
+        contractName: CONTRACT_NAME,
+        walletUrl: 'https://wallet.betanet.near.org',
+        helperUrl: 'https://helper.betanet.near.org'
+      }
+    case 'local':
+      return {
+        networkId: 'local',
+        nodeUrl: 'http://localhost:3030',
+        keyPath: `${process.env.HOME}/.near/validator_key.json`,
+        walletUrl: 'http://localhost:4000/wallet',
+        contractName: CONTRACT_NAME
+      }
+    case 'test':
+    case 'ci':
+      return {
+        networkId: 'shared-test',
+        nodeUrl: 'https://rpc.ci-testnet.near.org',
+        contractName: CONTRACT_NAME,
+        masterAccount: 'test.near'
+      }
+    case 'ci-betanet':
+      return {
+        networkId: 'shared-test-staging',
+        nodeUrl: 'https://rpc.ci-betanet.near.org',
+        contractName: CONTRACT_NAME,
+        masterAccount: 'test.near'
+      }
+    default:
+      throw Error(`Unconfigured environment '${env}'. Can be configured in src/config.js.`)
+  }
 }
 
-module.exports = getConfig;
+module.exports = getConfig
