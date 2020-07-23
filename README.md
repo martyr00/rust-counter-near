@@ -27,7 +27,29 @@ Install dependencies:
 yarn
 ```
 
-Make sure you have `near-shell` by running:
+If you don't have `Rust` installed, complete the following 3 steps:
+
+1) Install Rustup by running:
+
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+([Taken from official installation guide](https://www.rust-lang.org/tools/install))
+
+2) Configure your current shell by running:
+
+```
+source $HOME/.cargo/env
+```
+
+3) Add wasm target to your toolchain by running:
+
+```
+rustup target add wasm32-unknown-unknown
+```
+
+Next, make sure you have `near-shell` by running:
 
 ```
 near --version
