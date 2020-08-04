@@ -49,22 +49,22 @@ source $HOME/.cargo/env
 rustup target add wasm32-unknown-unknown
 ```
 
-Next, make sure you have `near-shell` by running:
+Next, make sure you have `near-cli` by running:
 
 ```
 near --version
 ```
 
-If you need to install `near-shell`:
+If you need to install `near-cli`:
 
 ```
-npm install near-shell -g
+npm install near-cli -g
 ```
 
 ## Login
 If you do not have a NEAR account, please create one with [NEAR Wallet](https://wallet.nearprotocol.com).
 
-In the project root, login with `near-shell` by following the instructions after this command:
+In the project root, login with `near-cli` by following the instructions after this command:
 
 ```
 near login
