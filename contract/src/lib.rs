@@ -8,11 +8,11 @@
 //! [get_num]: struct.Counter.html#method.get_num
 //! [reset]: struct.Counter.html#method.reset
 
-use borsh::{BorshDeserialize, BorshSerialize};
+use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
 
 #[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
 
 // add the following attributes to prepare your code for serialization and invocation on the blockchain
 // More built-in Rust attributes here: https://doc.rust-lang.org/reference/attributes.html#built-in-attributes-index

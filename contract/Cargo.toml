@@ -1,18 +1,14 @@
 [package]
 name = "rust-counter-tutorial"
 version = "0.1.0"
-authors = ["Alice Bob <alice@example.com>"]
+authors = ["Near Inc <hello@near.org>"]
 edition = "2018"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-serde = { version = "*", features = ["derive"] }
-serde_json = "*"
-borsh = "*"
-near-sdk = "0.11.0"
-wee_alloc = { version = "0.4.5", default-features = false, features = [] }
+near-sdk = "2.0.0"
 
 [profile.release]
 codegen-units = 1
