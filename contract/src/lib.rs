@@ -11,8 +11,7 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
 
-#[global_allocator]
-static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
+near_sdk::setup_alloc!();
 
 // add the following attributes to prepare your code for serialization and invocation on the blockchain
 // More built-in Rust attributes here: https://doc.rust-lang.org/reference/attributes.html#built-in-attributes-index
@@ -52,6 +51,8 @@ impl Counter {
     pub fn increment(&mut self) {
         // note: adding one like this is an easy way to accidentally overflow
         // real smart contracts will want to have safety checks
+        // e.g. self.val = i8::wrapping_add(self.val, 1);
+        // https://doc.rust-lang.org/std/primitive.i8.html#method.wrapping_add
         self.val += 1;
         let log_message = format!("Increased number to {}", self.val);
         env::log(log_message.as_bytes());
@@ -69,6 +70,8 @@ impl Counter {
     pub fn decrement(&mut self) {
         // note: subtracting one like this is an easy way to accidentally overflow
         // real smart contracts will want to have safety checks
+        // e.g. self.val = i8::wrapping_sub(self.val, 1);
+        // https://doc.rust-lang.org/std/primitive.i8.html#method.wrapping_sub
         self.val -= 1;
         let log_message = format!("Decreased number to {}", self.val);
         env::log(log_message.as_bytes());
