@@ -150,11 +150,11 @@ mod tests {
     fn decrement() {
         let context = get_context(vec![], false);
         testing_env!(context);
-        let mut contract = Counter { val: -128 };
+        let mut contract = Counter { val: 0 };
         contract.decrement();
         println!("Value after decrement: {}", contract.get_num());
         // confirm that we received -1 when calling get_num
-        assert_eq!(127, contract.get_num());
+        assert_eq!(-1, contract.get_num());
     }
 
     #[test]
