@@ -1,10 +1,13 @@
 pub use near_sdk::json_types::{Base64VecU8, ValidAccountId, WrappedDuration, U64};
+use near_sdk::serde_json::json;
 use near_sdk_sim::{call, view, deploy, init_simulator, to_yocto, ContractAccount};
 use rust_counter_tutorial::CounterContract;
 
 near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
     COUNTER_BYTES => "../out/main.wasm",
 }
+
+pub const DEFAULT_GAS: u64 = 300_000_000_000_000;
 
 #[test]
 fn simulate_increment() {
@@ -35,6 +38,28 @@ fn simulate_increment() {
     current_num = view!(
         counter.get_num()
     ).unwrap_json();
-    println!("Number after: {}", &current_num);
-    assert_eq!(&current_num, &1, "After adding, the number should be one.");
+    println!("Number after first increment: {}", &current_num);
+    assert_eq!(&current_num, &1, "After incrementing, the number should be one.");
+
+    // Now use the non-macro approach to increment the number.
+    root.call(
+        counter.account_id(),
+        "increment",
+        &json!({})
+            .to_string()
+            .into_bytes(), // 0.06 Ⓝ
+        DEFAULT_GAS,
+        0, // attached deposit
+    ).assert_success();
+
+    // Similarly, use the non-macro approach to check the value.
+    current_num = root.view(
+        counter.account_id(),
+        "get_num",
+        &json!({})
+            .to_string()
+            .into_bytes(),
+    ).unwrap_json();
+    println!("Number after second increment: {}", &current_num);
+    assert_eq!(&current_num, &2, "After incrementing twice, the number should be two.");
 }
