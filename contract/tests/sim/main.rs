@@ -1,6 +1,6 @@
 pub use near_sdk::json_types::{Base64VecU8, ValidAccountId, WrappedDuration, U64};
 use near_sdk::serde_json::json;
-use near_sdk_sim::{call, view, deploy, init_simulator, to_yocto, ContractAccount};
+use near_sdk_sim::{call, view, deploy, init_simulator, ContractAccount};
 use rust_counter_tutorial::CounterContract;
 
 near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
@@ -12,7 +12,6 @@ pub const DEFAULT_GAS: u64 = 300_000_000_000_000;
 #[test]
 fn simulate_increment() {
     let root = init_simulator(None);
-    let _user1 = root.create_user("foo.root".to_string(), to_yocto("1000"));
 
     // Deploy the compiled Wasm bytes
     let counter: ContractAccount<CounterContract> = deploy!(
@@ -47,7 +46,7 @@ fn simulate_increment() {
         "increment",
         &json!({})
             .to_string()
-            .into_bytes(), // 0.06 Ⓝ
+            .into_bytes(),
         DEFAULT_GAS,
         0, // attached deposit
     ).assert_success();
