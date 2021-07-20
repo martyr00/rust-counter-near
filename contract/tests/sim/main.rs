@@ -1,6 +1,6 @@
 pub use near_sdk::json_types::{Base64VecU8, ValidAccountId, WrappedDuration, U64};
 use near_sdk::serde_json::json;
-use near_sdk_sim::{call, view, deploy, init_simulator, ContractAccount};
+use near_sdk_sim::{call, view, deploy, init_simulator, ContractAccount, UserAccount};
 use rust_counter_tutorial::CounterContract;
 
 near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
@@ -9,17 +9,23 @@ near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
 
 pub const DEFAULT_GAS: u64 = 300_000_000_000_000;
 
-#[test]
-fn simulate_increment() {
+fn init() -> (UserAccount, ContractAccount<CounterContract>) {
     let root = init_simulator(None);
 
     // Deploy the compiled Wasm bytes
     let counter: ContractAccount<CounterContract> = deploy!(
-        contract: CounterContract,
-        contract_id: "counter".to_string(),
-        bytes: &COUNTER_BYTES,
-        signer_account: root
-    );
+         contract: CounterContract,
+         contract_id: "counter".to_string(),
+         bytes: &COUNTER_BYTES,
+         signer_account: root
+     );
+
+    (root, counter)
+}
+
+#[test]
+fn simulate_increment() {
+    let (root, counter) = init();
 
     // Get number on account that hasn't incremented or decremented
     let mut current_num: i8 = view!(
