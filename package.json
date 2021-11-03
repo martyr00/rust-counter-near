@@ -30,7 +30,6 @@
     "testEnvironment": "near-cli/test_environment"
   },
   "dependencies": {
-    "deasync": "^0.1.23",
     "near-api-js": "^0.43.1",
     "regenerator-runtime": "^0.13.5"
   }
