@@ -24,7 +24,7 @@ pub struct Counter {
 
 #[near_bindgen]
 impl Counter {
-    /// Returns 8-bit signed integer of the counter value.
+    /// Public method: Returns the counter value.
     ///
     /// This must match the type from our struct's 'val' defined above.
     ///
@@ -39,7 +39,7 @@ impl Counter {
         return self.val;
     }
 
-    /// Increment the counter.
+    /// Public method: Increment the counter.
     ///
     /// Note, the parameter is "&mut self" as this function modifies state.
     /// In the frontend (/src/main.js) this is added to the "changeMethods" array
@@ -49,17 +49,13 @@ impl Counter {
     /// near call counter.YOU.testnet increment --accountId donation.YOU.testnet
     /// ```
     pub fn increment(&mut self) {
-        // note: adding one like this is an easy way to accidentally overflow
-        // real smart contracts will want to have safety checks
-        // e.g. self.val = i8::wrapping_add(self.val, 1);
-        // https://doc.rust-lang.org/std/primitive.i8.html#method.wrapping_add
+        self.safeguard_overflow();
         self.val += 1;
         let log_message = format!("Increased number to {}", self.val);
         env::log(log_message.as_bytes());
-        after_counter_change();
     }
 
-    /// Decrement (subtract from) the counter.
+    /// Public method: Decrement the counter.
     ///
     /// In (/src/main.js) this is also added to the "changeMethods" array
     /// using near-cli we can call this by:
@@ -68,30 +64,32 @@ impl Counter {
     /// near call counter.YOU.testnet decrement --accountId donation.YOU.testnet
     /// ```
     pub fn decrement(&mut self) {
-        // note: subtracting one like this is an easy way to accidentally overflow
-        // real smart contracts will want to have safety checks
-        // e.g. self.val = i8::wrapping_sub(self.val, 1);
-        // https://doc.rust-lang.org/std/primitive.i8.html#method.wrapping_sub
+        self.safeguard_underflow();
         self.val -= 1;
         let log_message = format!("Decreased number to {}", self.val);
         env::log(log_message.as_bytes());
-        after_counter_change();
     }
 
-    /// Reset to zero.
+    /// Public method - Reset to zero.
     pub fn reset(&mut self) {
         self.val = 0;
         // Another way to log is to cast a string into bytes, hence "b" below:
         env::log(b"Reset counter to zero");
     }
-}
 
-// unlike the struct's functions above, this function cannot use attributes #[derive(…)] or #[near_bindgen]
-// any attempts will throw helpful warnings upon 'cargo build'
-// while this function cannot be invoked directly on the blockchain, it can be called from an invoked function
-fn after_counter_change() {
-    // show helpful warning that i8 (8-bit signed integer) will overflow above 127 or below -128
-    env::log("Make sure you don't overflow, my friend.".as_bytes());
+    // Private method - Safeguard against underflow
+    fn safeguard_underflow(&self) {
+        if self.val == -128 {
+            env::panic(b"Counter is at minimum");
+        }
+    }
+
+    // Private method - Safeguard against underflow
+    fn safeguard_overflow(&self) {
+        if self.val == 127 {
+            env::panic(b"Counter is at maximum");
+        }
+    }
 }
 
 /*
@@ -159,5 +157,23 @@ mod tests {
         println!("Value after reset: {}", contract.get_num());
         // confirm that we received -1 when calling get_num
         assert_eq!(0, contract.get_num());
+    }
+
+    #[test]
+    #[should_panic]
+    fn panics_on_overflow() {
+        let context = VMContextBuilder::new();
+        testing_env!(context.build());
+        let mut contract = Counter { val: 127 };
+        contract.increment();
+    }
+
+    #[test]
+    #[should_panic]
+    fn panics_on_underflow() {
+        let context = VMContextBuilder::new();
+        testing_env!(context.build());
+        let mut contract = Counter { val: -128 };
+        contract.decrement();
     }
 }

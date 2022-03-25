@@ -3,8 +3,9 @@ describe('Token', function () {
   let contract;
   let accountId;
 
+  jest.setTimeout(20000);
+
   beforeAll(async function () {
-    console.log('nearConfig', nearConfig);
     near = await nearlib.connect(nearConfig);
     accountId = nearConfig.contractName;
     contract = await near.loadContract(nearConfig.contractName, {
@@ -30,7 +31,6 @@ describe('Token', function () {
     });
     it('can be reset', async function () {
       await contract.increment();
-      const startCounter = await contract.get_num();
       await contract.reset();
       const endCounter = await contract.get_num();
       expect(endCounter).toEqual(0);
