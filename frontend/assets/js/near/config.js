@@ -1,4 +1,5 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'asdf.test'; /* TODO: change this to your account */
+/* Note: Change this to your account */
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'change_this_account';
 
 function getConfig (env) {
   switch (env) {
