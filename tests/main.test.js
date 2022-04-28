@@ -17,22 +17,22 @@ describe('Token', function () {
 
   describe('counter', function () {
     it('can be incremented', async function () {
-      const startCounter = await contract.get_num();
-      await contract.increment();
-      const endCounter = await contract.get_num();
+      const startCounter = await contract.get_num({args:{}});
+      await contract.increment({args:{}});
+      const endCounter = await contract.get_num({args:{}});
       expect(endCounter).toEqual(startCounter + 1);
     });
     it('can be decremented', async function () {
-      await contract.increment();
-      const startCounter = await contract.get_num();
-      await contract.decrement();
-      const endCounter = await contract.get_num();
+      await contract.increment({args:{}});
+      const startCounter = await contract.get_num({args:{}});
+      await contract.decrement({args:{}});
+      const endCounter = await contract.get_num({args:{}});
       expect(endCounter).toEqual(startCounter - 1);
     });
     it('can be reset', async function () {
-      await contract.increment();
-      await contract.reset();
-      const endCounter = await contract.get_num();
+      await contract.increment({args:{}});
+      await contract.reset({args:{}});
+      const endCounter = await contract.get_num({args:{}});
       expect(endCounter).toEqual(0);
     });
   });
