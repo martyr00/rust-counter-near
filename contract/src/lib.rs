@@ -6,8 +6,6 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{log, near_bindgen};
 
 
-// add the following attributes to prepare your code for serialization and invocation on the blockchain
-// More built-in Rust attributes here: https://doc.rust-lang.org/reference/attributes.html#built-in-attributes-index
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
 pub struct Counter {
@@ -17,42 +15,17 @@ pub struct Counter {
 #[near_bindgen]
 impl Counter {
     /// Public method: Returns the counter value.
-    ///
-    /// This must match the type from our struct's 'val' defined above.
-    ///
-    /// Note, the parameter is `&self` (without being mutable) meaning it doesn't modify state.
-    /// In the frontend (/src/main.js) this is added to the "viewMethods" array
-    /// using near-cli we can call this by:
-    ///
-    /// ```bash
-    /// near view counter.YOU.testnet get_num
-    /// ```
     pub fn get_num(&self) -> i8 {
         return self.val;
     }
 
     /// Public method: Increment the counter.
-    ///
-    /// Note, the parameter is "&mut self" as this function modifies state.
-    /// In the frontend (/src/main.js) this is added to the "changeMethods" array
-    /// using near-cli we can call this by:
-    ///
-    /// ```bash
-    /// near call counter.YOU.testnet increment --accountId donation.YOU.testnet
-    /// ```
     pub fn increment(&mut self) {
         self.val += 1;
         log!("Increased number to {}", self.val);
     }
 
     /// Public method: Decrement the counter.
-    ///
-    /// In (/src/main.js) this is also added to the "changeMethods" array
-    /// using near-cli we can call this by:
-    ///
-    /// ```bash
-    /// near call counter.YOU.testnet decrement --accountId donation.YOU.testnet
-    /// ```
     pub fn decrement(&mut self) {
         self.val -= 1;
         log!("Decreased number to {}", self.val);
