@@ -29,4 +29,10 @@ dist/
 # Rust build files
 contract/target/**
 
+# lock files
+*.lock
+
+# ignore out dir
+out/
+
 yarn-error.log

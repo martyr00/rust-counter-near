@@ -4,24 +4,22 @@
   "version": "1.0.0",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
-    "build": "cd contract && node ./compile.js",
+    "build:rustup": "cd contract && rustup target add wasm32-unknown-unknown && cargo build --all --target wasm32-unknown-unknown --release",
+    "build:cpwasm": "mkdir -p out && rm -f ./out/main.wasm && cp -u ./contract/target/wasm32-unknown-unknown/release/rust_counter.wasm ./out/main.wasm",
+    "build": "npm run build:rustup && npm run build:cpwasm",
     "deploy": "npm run build && near dev-deploy",
-    "test": "npm run build && cd contract && cargo test && cd .. && jest test --runInBand",
-    "jest": "npm run build && jest test --runInBand",
+    "test:workspaces:ts": "ava",
+    "test": "npm run build && cd contract && cargo test",
     "start": "npm run build && npm run deploy && echo The app is starting! && env-cmd -f ./neardev/dev-account.env parcel frontend/index.html --open",
     "dev": "nodemon --watch contract -e ts --exec \"npm run start\""
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
-    "jest": "~28.0.2",
-    "jest-environment-node": "~28.0.2",
     "near-cli": "^3.2.0",
     "nodemon": "~2.0.15",
     "parcel-bundler": "~1.12.5",
-    "shelljs": "~0.8.5"
-  },
-  "jest": {
-    "testEnvironment": "near-cli/test_environment"
+    "near-workspaces": "^2.0.0",
+    "ava": "^4.2.0"
   },
   "dependencies": {
     "near-api-js": "^0.44.2",
