@@ -9,7 +9,10 @@
     "build": "npm run build:rustup && npm run build:cpwasm",
     "deploy": "npm run build && near dev-deploy",
     "test:workspaces:ts": "ava --verbose",
-    "test": "npm run build && cd contract && cargo test",
+    "test:workspaces:rs": "cd integration-tests/rs && cargo run --example increment",
+    "test:workspaces": "npm run test:workspaces:ts && npm run test:workspaces:rs",
+    "test:unit": "cd contract && cargo test",
+    "test": "npm run build && npm run test:unit && npm run test:workspaces",
     "start": "npm run build && npm run deploy && echo The app is starting! && env-cmd -f ./neardev/dev-account.env parcel frontend/index.html --open",
     "dev": "nodemon --watch contract -e ts --exec \"npm run start\""
   },

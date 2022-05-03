@@ -1,7 +1,3 @@
-##########################################
-# this file is useful with create-near-app
-##########################################
-
 # ignore Mac OS noise
 .DS_Store
 
@@ -27,7 +23,7 @@ dist/
 .idea
 
 # Rust build files
-contract/target/**
+target/
 
 # lock files
 *.lock
