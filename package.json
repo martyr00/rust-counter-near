@@ -8,7 +8,7 @@
     "build:cpwasm": "mkdir -p out && rm -f ./out/main.wasm && cp -u ./contract/target/wasm32-unknown-unknown/release/rust_counter.wasm ./out/main.wasm",
     "build": "npm run build:rustup && npm run build:cpwasm",
     "deploy": "npm run build && near dev-deploy",
-    "test:workspaces:ts": "ava",
+    "test:workspaces:ts": "ava --verbose",
     "test": "npm run build && cd contract && cargo test",
     "start": "npm run build && npm run deploy && echo The app is starting! && env-cmd -f ./neardev/dev-account.env parcel frontend/index.html --open",
     "dev": "nodemon --watch contract -e ts --exec \"npm run start\""

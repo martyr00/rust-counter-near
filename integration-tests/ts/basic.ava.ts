@@ -1,12 +1,3 @@
-/**
- * This test demonstrates basic behavior of near-workspaces, making simple
- * function calls and view calls to the contract from
- * https://github.com/near-examples/rust-status-message
- *
- * Note that the same tests will be run on both a local sandbox environment and
- * on testnet by using the `test:sandbox` and `test:testnet` scripts in
- * package.json.
- */
 import { Worker, NEAR, NearAccount } from "near-workspaces";
 import anyTest, { TestFn } from "ava";
 
@@ -19,20 +10,28 @@ test.beforeEach(async (t) => {
   // Init the worker and start a Sandbox server
   const worker = await Worker.init();
 
-  // Prepare sandbox for tests, create accounts, deploy contracts, etx.
+  // deploy contract
   const root = worker.rootAccount;
   const contract = await root.createAndDeploy(
     root.getSubAccount("rust-counter").accountId,
-    "../../../out/main.wasm",
-    { initialBalance: NEAR.parse("3 N").toJSON() }
+    "./out/main.wasm",
+    { initialBalance: NEAR.parse("30 N").toJSON() }
   );
-  const ali = await root.createSubAccount("ali", {
-    initialBalance: NEAR.parse("3 N").toJSON(),
+
+  // some test accounts
+  const alice = await root.createSubAccount("alice", {
+    initialBalance: NEAR.parse("30 N").toJSON(),
+  });
+  const bob = await root.createSubAccount("bob", {
+    initialBalance: NEAR.parse("30 N").toJSON(),
+  });
+  const charlie = await root.createSubAccount("charlie", {
+    initialBalance: NEAR.parse("30 N").toJSON(),
   });
 
   // Save state for test runs, it is unique for each test
   t.context.worker = worker;
-  t.context.accounts = { root, contract, ali };
+  t.context.accounts = { root, contract, alice, bob, charlie };
 });
 
 test.afterEach(async (t) => {
@@ -42,30 +41,28 @@ test.afterEach(async (t) => {
   });
 });
 
-test("Root gets null status", async (t) => {
+test("can be incremented", async (t) => {
   const { root, contract } = t.context.accounts;
-  const result: null = await contract.view("get_status", {
-    account_id: root.accountId,
-  });
-  t.is(result, null);
+  const startCounter: number = await contract.view("get_num", {});
+  await root.call(contract, "increment", {});
+  const endCounter = await contract.view("get_num", {});
+  t.is(endCounter, startCounter + 1);
 });
 
-test("Ali sets then gets status", async (t) => {
-  const { ali, contract } = t.context.accounts;
-  await ali.call(contract, "set_status", { message: "hello" });
-  const result: string = await contract.view("get_status", { account_id: ali });
-  t.is(result, "hello");
+test("can be decremented", async (t) => {
+  const { root, contract } = t.context.accounts;
+  await root.call(contract, "increment", {});
+  const startCounter: number = await contract.view("get_num", {});
+  await root.call(contract, "decrement", {});
+  const endCounter = await contract.view("get_num", {});
+  t.is(endCounter, startCounter - 1);
 });
 
-test("Root and Ali have different statuses", async (t) => {
-  const { root, contract, ali } = t.context.accounts;
-  await root.call(contract, "set_status", { message: "world" });
-  const rootStatus: string = await contract.view("get_status", {
-    account_id: root,
-  });
-  t.is(rootStatus, "world");
-  const aliStatus: null = await contract.view("get_status", {
-    account_id: ali,
-  });
-  t.is(aliStatus, null);
+test("can be reset", async (t) => {
+  const { root, contract } = t.context.accounts;
+  await root.call(contract, "increment", {});
+  await root.call(contract, "increment", {});
+  await root.call(contract, "reset", {});
+  const endCounter = await contract.view("get_num", {});
+  t.is(endCounter, 0);
 });
