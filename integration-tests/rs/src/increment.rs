@@ -2,7 +2,7 @@ use serde_json::json;
 use near_units::parse_near;
 use workspaces::prelude::*;
 
-const WASM_FILEPATH: &str = "../../out/main.wasm";
+const WASM_FILEPATH: &str = "../../out/counter.wasm";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
