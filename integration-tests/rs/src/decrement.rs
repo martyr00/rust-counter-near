@@ -20,6 +20,12 @@ async fn main() -> anyhow::Result<()> {
     .into_result()?;
 
     // begin test
+    alice
+        .call(&worker, contract.id(), "increment")
+        .args_json(json!({}))?
+        .transact()
+        .await?;
+
     let start_counter: u64 = alice
         .call(&worker, contract.id(), "get_num")
         .args_json(json!({}))?
@@ -28,7 +34,7 @@ async fn main() -> anyhow::Result<()> {
         .json()?;
 
     alice
-        .call(&worker, contract.id(), "increment")
+        .call(&worker, contract.id(), "decrement")
         .args_json(json!({}))?
         .transact()
         .await?;
@@ -40,7 +46,7 @@ async fn main() -> anyhow::Result<()> {
         .await?
         .json()?;
 
-    assert_eq!(end_counter, start_counter + 1);
+    assert_eq!(end_counter, start_counter - 1);
     println!("Passed ✅");
     Ok(())
 }
