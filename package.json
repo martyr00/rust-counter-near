@@ -9,7 +9,7 @@
     "build": "npm run build:rustup && npm run build:cpwasm",
     "deploy": "npm run build && near dev-deploy",
     "test:integration:ts": "ava --verbose",
-    "test:integration:rs": "cd integration-tests/rs && cargo run --example increment && cargo run --example decrement",
+    "test:integration:rs": "cd integration-tests/rs && cargo run --example increment && cargo run --example decrement && cargo run --example reset",
     "test:integration": "npm run build && npm run test:integration:ts && npm run test:integration:rs",
     "test:unit": "cd contract && cargo test",
     "test": "npm run test:unit && npm run test:integration",
