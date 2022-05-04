@@ -87,8 +87,7 @@ yarn start
 ## To Test
 
 ```
-cd contract
-cargo test -- --nocapture
+yarn test
 ```
 
 ## To Explore
