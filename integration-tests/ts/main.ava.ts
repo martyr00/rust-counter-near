@@ -9,9 +9,9 @@ const test = anyTest as TestFn<{
 test.beforeEach(async (t) => {
   // Init the worker and start a Sandbox server
   const worker = await Worker.init();
+  const root = worker.rootAccount;
 
   // deploy contract
-  const root = worker.rootAccount;
   const contract = await root.createAndDeploy(
     root.getSubAccount("rust-counter").accountId,
     "./out/counter.wasm",
