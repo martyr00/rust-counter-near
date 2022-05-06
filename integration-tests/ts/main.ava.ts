@@ -2,14 +2,14 @@ import { Worker, NEAR, NearAccount } from "near-workspaces";
 import anyTest, { TestFn } from "ava";
 
 const test = anyTest as TestFn<{
-  sandbox: Worker;
+  worker: Worker;
   accounts: Record<string, NearAccount>;
 }>;
 
 test.beforeEach(async (t) => {
-  // Init the sandbox and start a Sandbox server
-  const sandbox = await Worker.init();
-  const root = sandbox.rootAccount;
+  // Init the worker and start a Sandbox server
+  const worker = await Worker.init();
+  const root = worker.rootAccount;
 
   // deploy contract
   const contract = await root.createAndDeploy(
@@ -30,13 +30,13 @@ test.beforeEach(async (t) => {
   });
 
   // Save state for test runs, it is unique for each test
-  t.context.sandbox = sandbox;
+  t.context.worker = worker;
   t.context.accounts = { root, contract, alice, bob, charlie };
 });
 
 test.afterEach(async (t) => {
   // Stop Sandbox server
-  await t.context.sandbox.tearDown().catch((error) => {
+  await t.context.worker.tearDown().catch((error) => {
     console.log("Failed to stop the Sandbox:", error);
   });
 });
