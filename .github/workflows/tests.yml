@@ -22,6 +22,4 @@ jobs:
       - name: Install modules
         run: yarn
       - name: Run unit tests
-        run: yarn test:unit
-      - name: Run integration Tests
-        run: yarn test:integration
+        run: yarn test
