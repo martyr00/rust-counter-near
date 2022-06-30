@@ -45,7 +45,7 @@ export async function getCounter(){
 }
 
 export async function counterIncrement(){
-  await window.contract.increment({args:{}})
+  await window.contract.increment({args:{}}, "300000000000000", "1000000000000000000000000")
 }
 
 export async function counterDecrement(){

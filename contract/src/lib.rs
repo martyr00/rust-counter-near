@@ -3,7 +3,9 @@
 //! The contract provides methods to [increment] / [decrement] counter and
 //! get it's current value [get_num] or [reset].
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{log, near_bindgen};
+use near_sdk::{log, near_bindgen, env, Promise};
+
+const MIN_DEPOSIT: u128 = 1_000_000_000_000_000_000_000_000;
 
 
 #[near_bindgen]
@@ -20,9 +22,19 @@ impl Counter {
     }
 
     /// Public method: Increment the counter.
+    #[payable]
     pub fn increment(&mut self) {
+        let amount = env::attached_deposit();
+        assert!(amount >= MIN_DEPOSIT, "not enough deposit");
+
+        let money_back: u128 = amount - MIN_DEPOSIT;
+
+        if money_back > 0 {
+            Promise::new(env::predecessor_account_id()).transfer(money_back);
+        };
+
         self.val += 1;
-        log!("Increased number to {}", self.val);
+        log!("Increased number to {}, moneyback: {}", self.val, money_back);
     }
 
     /// Public method: Decrement the counter.
@@ -44,7 +56,7 @@ impl Counter {
  * Note: 'rust-counter-tutorial' comes from cargo.toml's 'name' key
  */
 
-// use the attribute below for unit tests
+/*// use the attribute below for unit tests
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -86,3 +98,4 @@ mod tests {
         contract.decrement();
     }
 }
+*/
