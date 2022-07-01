@@ -32,3 +32,4 @@ target/
 out/
 
 yarn-error.log
+*.old.*
