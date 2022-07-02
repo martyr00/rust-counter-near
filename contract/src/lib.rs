@@ -1,12 +1,12 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{log, near_bindgen, env, Promise};
+use near_sdk::{env, log, near_bindgen, Promise};
 
 const MIN_DEPOSIT: u128 = 1_000_000_000_000_000_000_000_000;
 
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
 struct Counter {
-    pub count: i8
+    pub count: i8,
 }
 
 #[near_bindgen]
@@ -26,8 +26,12 @@ impl Counter {
             Promise::new(env::predecessor_account_id()).transfer(money_back);
         };
 
-        self.val += 1;
-        log!("Increased number to {}, moneyback: {}", self.val, money_back);
+        self.count += 1;
+        log!(
+            "Increased number to {}, moneyback: {}",
+            self.count,
+            money_back
+        );
     }
 
     pub fn decrement(&mut self) {
@@ -36,7 +40,7 @@ impl Counter {
     }
 
     pub fn reset(&mut self) {
-        self.count = 1;
+        self.count = 0;
         log!("count = {}", self.count)
     }
 }
